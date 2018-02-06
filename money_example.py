@@ -37,11 +37,11 @@ class Money(object):
 
     @staticmethod
     def dollar(amount, currency='USD'):
-        return Dollar(amount, currency=currency)
+        return Money(amount, currency=currency)
 
     @staticmethod
     def franc(amount, currency='CHF'):
-        return Franc(amount, currency=currency)
+        return Money(amount, currency=currency)
 
     def times(self, multiplier):
         return Money(self._amount * multiplier, self.currency)
@@ -49,13 +49,3 @@ class Money(object):
     @property
     def currency(self):
         return self._currency
-
-
-class Dollar(Money):
-    def __init__(self, amount, currency):
-        super().__init__(amount, currency)
-
-
-class Franc(Money):
-    def __init__(self, amount, currency):
-        super().__init__(amount, currency)
