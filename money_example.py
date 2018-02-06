@@ -15,7 +15,7 @@ class Money(object):
         )
 
     def __str__(self):
-        return str(self._amount + ' ' + self.currency)
+        return str(self._amount) + ' ' + str(self.currency)
 
     def __hash__(self):
         return hash((self.__class__, self._amount))
