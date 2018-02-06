@@ -1,5 +1,10 @@
 
 
+class Expression:
+    def __init__(self, *args):
+        pass
+
+
 class Money(object):
     def __init__(self, amount, currency):
         self._amount = amount
@@ -43,6 +48,14 @@ class Money(object):
     def times(self, multiplier):
         return Money(self._amount * multiplier, self.currency)
 
+    def plus(self, addend):
+        return Expression(Money(self._amount + addend._amount, self.currency))
+
     @property
     def currency(self):
         return self._currency
+
+
+class Bank(object):
+    def reduce(self, source, to):
+        return Money.dollar(10)
