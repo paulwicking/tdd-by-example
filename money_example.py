@@ -9,14 +9,23 @@ class Money(object):
         self._currency = currency
 
     def __repr__(self):
-        return repr(self._amount)
+        return repr(
+            str(self.__class__)
+            + ': ' +
+            str(self._amount)
+            + ' ' +
+            self.currency
+        )
+
+    def __str__(self):
+        return str(self._amount + ' ' + self.currency)
 
     def __hash__(self):
         return hash((self.__class__, self._amount))
 
     def __eq__(self, other):
         return (
-                self.__class__ == other.__class__ and
+                self.currency == other.currency and
                 self._amount == other._amount
         )
 
@@ -27,16 +36,15 @@ class Money(object):
         return self.__eq__(other)
 
     @staticmethod
-    def dollar(amount):
-        return Dollar(amount, "USD")
+    def dollar(amount, currency='USD'):
+        return Dollar(amount, currency=currency)
 
     @staticmethod
-    def franc(amount):
-        return Franc(amount, "CHF")
+    def franc(amount, currency='CHF'):
+        return Franc(amount, currency=currency)
 
-    @abstractmethod
     def times(self, multiplier):
-        pass
+        return Money(self._amount * multiplier, self.currency)
 
     @property
     def currency(self):
@@ -47,13 +55,7 @@ class Dollar(Money):
     def __init__(self, amount, currency):
         super().__init__(amount, currency)
 
-    def times(self, multiplier):
-        return Money.dollar(self._amount * multiplier)
-
 
 class Franc(Money):
     def __init__(self, amount, currency):
         super().__init__(amount, currency)
-
-    def times(self, multiplier):
-        return Money.franc(self._amount * multiplier)
