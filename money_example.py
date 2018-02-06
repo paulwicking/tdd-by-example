@@ -4,8 +4,9 @@ from abc import ABCMeta, abstractmethod
 class Money(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, amount):
+    def __init__(self, amount, currency):
         self._amount = amount
+        self._currency = currency
 
     def __repr__(self):
         return repr(self._amount)
@@ -27,30 +28,32 @@ class Money(object):
 
     @staticmethod
     def dollar(amount):
-        return Dollar(amount)
+        return Dollar(amount, "USD")
 
     @staticmethod
     def franc(amount):
-        return Franc(amount)
+        return Franc(amount, "CHF")
 
     @abstractmethod
     def times(self, multiplier):
         pass
 
+    @property
+    def currency(self):
+        return self._currency
+
 
 class Dollar(Money):
-    def __init__(self, amount):
-        super().__init__(amount)
+    def __init__(self, amount, currency):
+        super().__init__(amount, currency)
 
     def times(self, multiplier):
-        amount = self._amount * multiplier
-        return Dollar(amount)
+        return Money.dollar(self._amount * multiplier)
 
 
 class Franc(Money):
-    def __init__(self, amount):
-        super().__init__(amount)
+    def __init__(self, amount, currency):
+        super().__init__(amount, currency)
 
     def times(self, multiplier):
-        amount = self._amount * multiplier
-        return Franc(amount)
+        return Money.franc(self._amount * multiplier)
