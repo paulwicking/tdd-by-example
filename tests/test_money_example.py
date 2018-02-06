@@ -19,7 +19,14 @@ class TestMoney(TestCase):
 
     def test_simple_addition(self):
         five = Money(5, 'USD')
-        test_sum = Expression(five.plus(five))
+        test_sum = five.plus(five)
         bank = Bank()
         reduced = bank.reduce(test_sum, 'USD')
         self.assertEqual(Money.dollar(10), reduced)
+
+    def test_reduce_sum(self):
+        test_sum = Sum(Money.dollar(3), Money.dollar(4))
+        bank = Bank()
+        result = bank.reduce(test_sum, 'USD')
+
+        self.assertEqual(Money.dollar(7), result)
