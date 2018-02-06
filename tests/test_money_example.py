@@ -5,12 +5,12 @@ from money_example import *
 class TestDollar(TestCase):
     def test_multiplication(self):
         five = Dollar(5)
-        actual = five.times(2)
+        product = five.times(2)
 
-        self.assertEqual(10, actual._amount)
+        self.assertEqual(10, product)
 
-        actual = five.times(3)
-        self.assertEqual(15, actual._amount)
+        product = five.times(3)
+        self.assertEqual(15, product)
 
     def test_equality(self):
         self.assertTrue(Dollar(5).equals(Dollar(5)))
