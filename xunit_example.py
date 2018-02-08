@@ -1,5 +1,7 @@
+"""An example implementation of xUnit from TDD by example by Kent Beck."""
 
-class TestCase():
+
+class TestCase:
     def __init__(self, name):
         self.name = name
         self.test = None  # Set by TestCaseTest.set_up()
@@ -11,17 +13,15 @@ class TestCase():
     def tear_down(self):
         pass
 
-    def run(self):
-        result = TestResult()
+    def run(self, result):
         result.test_started()
         self.set_up()
         try:
             method = getattr(self, self.name)
             method()
-        except TestException:
+        except (TestException, Exception):
             result.test_failed()
         self.tear_down()
-        return result
 
 
 class WasRun(TestCase):
@@ -55,3 +55,15 @@ class TestResult:
 
 class TestException(Exception):
     """Raise when tests raise an exception."""
+
+
+class TestSuite():
+    def __init__(self):
+        self.tests = []
+
+    def add(self, test):
+        self.tests.append(test)
+
+    def run(self, result):
+        for test in self.tests:
+            test.run(result)
