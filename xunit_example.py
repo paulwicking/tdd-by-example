@@ -15,8 +15,11 @@ class TestCase():
         result = TestResult()
         result.test_started()
         self.set_up()
-        method = getattr(self, self.name)
-        method()
+        try:
+            method = getattr(self, self.name)
+            method()
+        except TestException:
+            result.test_failed()
         self.tear_down()
         return result
 
@@ -32,15 +35,23 @@ class WasRun(TestCase):
         self.log += 'tear_down '
 
     def test_broken_method(self):
-        raise Exception
+        raise TestException
 
 
 class TestResult:
     def __init__(self):
         self.run_count = 0
+        self.error_count = 0
 
     def test_started(self):
         self.run_count += 1
 
     def summary(self):
-        return '%s run, 0 failed' % self.run_count
+        return '%s run, %s failed' % (self.run_count, self.error_count)
+
+    def test_failed(self):
+        self.error_count += 1
+
+
+class TestException(Exception):
+    """Raise when tests raise an exception."""
