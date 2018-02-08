@@ -4,8 +4,8 @@
 class TestCase:
     def __init__(self, name):
         self.name = name
-        self.test = None  # Set by TestCaseTest.set_up()
         self.log = None
+        self.result = None
 
     def set_up(self):
         pass
@@ -15,7 +15,10 @@ class TestCase:
 
     def run(self, result):
         result.test_started()
-        self.set_up()
+        try:
+            self.set_up()
+        except:
+            result.test_failed()
         try:
             method = getattr(self, self.name)
             method()
@@ -36,6 +39,9 @@ class WasRun(TestCase):
 
     def test_broken_method(self):
         raise TestException
+
+    def test_broken_setup(self):
+        self.log += 'set_up is broken '
 
 
 class TestResult:
