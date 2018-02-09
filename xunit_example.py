@@ -45,6 +45,10 @@ class TestResult:
         self.run_count += 1
 
     def summary(self):
+        if self.setup_fail_count > 0:
+            return '%s run, %s failed, %s setup failure' % \
+                   (self.run_count, self.setup_fail_count, self.error_count)
+
         return '%s run, %s failed' % (self.run_count, self.error_count)
 
     def test_failed(self):

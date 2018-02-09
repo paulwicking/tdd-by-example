@@ -64,7 +64,9 @@ class TestCaseTest(TestCase):
         assert self.result.setup_fail_count == 1
 
     def test_reports_setup_failure(self):
-        pass
+        test = TestBrokenSetupRaisesException('set_up')
+        test.run(self.result)
+        assert '1 run, 1 failed, 1 setup failure' == self.result.summary()
 
     def test_can_create_TestSuite_from_TestCase_class(self):
         pass
