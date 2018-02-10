@@ -1,4 +1,5 @@
 """An example implementation of xUnit from TDD by example by Kent Beck."""
+from inspect import isclass
 
 
 class TestException(Exception):
@@ -30,7 +31,6 @@ class TestCase:
                 method()
             except (TestException, Exception):
                 result.test_failed()
-
         finally:
             self.tear_down()
 
@@ -62,8 +62,16 @@ class TestSuite:
     def __init__(self):
         self.tests = []
 
+    def extract_test_methods(self, test_class):
+        for func in dir(test_class):
+            if func.startswith('test_'):
+                self.add(test_class(func))
+
     def add(self, test):
-        self.tests.append(test)
+        if isclass(test):
+            self.extract_test_methods(test)
+        else:
+            self.tests.append(test)
 
     def run(self, result):
         for test in self.tests:

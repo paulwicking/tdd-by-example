@@ -15,6 +15,10 @@ class WasRun(TestCase):
         raise TestException
 
 
+class EmptyTestClass(TestCase):
+    pass
+
+
 class TestBrokenSetupRaisesException(TestCase):
     def set_up(self):
         self.result = TestResult()
@@ -68,22 +72,32 @@ class TestCaseTest(TestCase):
         test.run(self.result)
         assert '1 run, 1 failed, 1 setup failure' == self.result.summary()
 
+    def test_can_extract_test_methods_from_class(self):
+        test_suite = TestSuite()
+        test_suite.add(WasRun)
+
+        assert len(test_suite.tests) == 2
+
+    def test_can_accept_empty_test_case_classes(self):
+        test_suite = TestSuite()
+        test_suite.add(EmptyTestClass)
+        assert len(test_suite.tests) == 0
+
     def test_can_create_TestSuite_from_TestCase_class(self):
-        pass
+        test_suite = TestSuite()
+        test_result = TestResult()
+
+        test_suite.add(WasRun)
+        test_suite.run(test_result)
+
+        assert '2 run, 1 failed' == test_result.summary()
 
 
 if __name__ == '__main__':
     suite = TestSuite()
-    suite.add(TestCaseTest('test_template_method'))
-    suite.add(TestCaseTest('test_result'))
-    suite.add(TestCaseTest('test_failed_result_formatting'))
-    suite.add(TestCaseTest('test_failed_result'))
-    suite.add(TestCaseTest('test_suite'))
-    suite.add(TestCaseTest('test_invokes_teardown_on_failure'))
-    suite.add(TestCaseTest('test_can_catch_setup_failure'))
-    suite.add(TestCaseTest('test_reports_setup_failure'))
-    suite.add(TestCaseTest('test_can_create_TestSuite_from_TestCase_class'))
-
+    suite.add(TestCaseTest)
     result = TestResult()
+
     suite.run(result)
+
     print(result.summary())
